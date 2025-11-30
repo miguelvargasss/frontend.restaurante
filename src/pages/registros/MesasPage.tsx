@@ -181,7 +181,7 @@ export const MesasPage: React.FC = () => {
                         onClick={() => setCreateModalOpen(true)}
                         className={styles.createButton}
                     >
-                        Crear Usuario
+                        Crear Mesa
                     </Button>
                 </div>
             </div>
