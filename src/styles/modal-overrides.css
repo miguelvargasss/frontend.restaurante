@@ -1,0 +1,94 @@
+/* ============================================
+   ESTILOS GLOBALES PARA MODALES DE USUARIO
+   Sobrescribe estilos de Ant Design
+   ============================================ */
+
+/* Inputs rectangulares - SIN border-radius */
+.ant-modal .ant-input,
+.ant-modal .ant-input-password,
+.ant-modal .ant-input-affix-wrapper,
+.ant-modal .ant-select-selector {
+    border-radius: 0 !important;
+    border: 1px solid #d9d9d9 !important;
+}
+
+/* Inputs en focus */
+.ant-modal .ant-input:focus,
+.ant-modal .ant-input:hover,
+.ant-modal .ant-input-password:focus,
+.ant-modal .ant-input-affix-wrapper:focus,
+.ant-modal .ant-input-affix-wrapper:hover {
+    border-color: #40a9ff !important;
+    box-shadow: none !important;
+}
+
+/* Select en focus */
+.ant-modal .ant-select-focused .ant-select-selector,
+.ant-modal .ant-select:hover .ant-select-selector {
+    border-color: #40a9ff !important;
+    box-shadow: none !important;
+}
+
+/* Botones rectangulares */
+.ant-modal .ant-btn {
+    border-radius: 0 !important;
+}
+
+/* Labels más visibles y con mejor tipografía */
+.ant-modal .ant-form-item-label>label {
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #262626 !important;
+    margin-bottom: 8px !important;
+}
+
+/* Asterisco rojo más visible */
+.ant-modal .ant-form-item-required::before {
+    color: #ff4d4f !important;
+    font-size: 14px !important;
+    margin-right: 4px !important;
+}
+
+/* Placeholders más sutiles */
+.ant-modal .ant-input::placeholder,
+.ant-modal .ant-select-selection-placeholder {
+    color: #bfbfbf !important;
+    font-weight: 400 !important;
+}
+
+/* Dropdown items */
+.ant-select-dropdown .ant-select-item {
+    border-radius: 0 !important;
+}
+
+/* Modal más limpio */
+.ant-modal-content {
+    border-radius: 0 !important;
+}
+
+.ant-modal-header {
+    border-radius: 0 !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    padding: 20px 24px !important;
+}
+
+.ant-modal-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #262626 !important;
+}
+
+.ant-modal-body {
+    padding: 24px !important;
+}
+
+/* Espaciado entre campos */
+.ant-modal .ant-form-item {
+    margin-bottom: 20px !important;
+}
+
+/* Mensajes de error */
+.ant-modal .ant-form-item-explain-error {
+    font-size: 12px !important;
+    margin-top: 4px !important;
+}

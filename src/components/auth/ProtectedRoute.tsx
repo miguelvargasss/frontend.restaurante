@@ -1,0 +1,25 @@
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAppSelector } from '../../redux/hooks';
+
+// ============================================
+// Props del componente
+// ============================================
+
+interface ProtectedRouteProps {
+    children: React.ReactNode;
+}
+
+// ============================================
+// Componente ProtectedRoute
+// ============================================
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+    const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return <>{children}</>;
+};

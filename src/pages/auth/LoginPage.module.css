@@ -1,0 +1,212 @@
+.pageContainer {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* Fondo degradado - ROJO CLARO ARRIBA, OSCURO ABAJO como Figma */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, #C85456 0%, #8B3638 40%, #4a2324 70%, #2d1415 100%);
+    z-index: 0;
+}
+
+/* TRIÁNGULO decorativo arriba (como en Figma) */
+.decorativeCircle1 {
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 400px solid transparent;
+    border-right: 400px solid transparent;
+    border-bottom: 500px solid rgba(139, 54, 56, 0.4);
+    border-radius: 0;
+    z-index: 1;
+    animation: float 8s ease-in-out infinite;
+}
+
+/* CÍRCULO decorativo abajo derecha (como en Figma) */
+.decorativeCircle2 {
+    position: absolute;
+    bottom: -25%;
+    right: -15%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(77, 35, 36, 0.5) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 1;
+    animation: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-30px) scale(1.03);
+    }
+}
+
+/* Card principal - VERTICAL como Figma */
+.loginCard {
+    position: relative;
+    z-index: 10;
+    background: rgba(88, 20, 22, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    padding: 40px 36px 44px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 380px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Título ARRIBA del logo */
+.title {
+    color: #FFFFFF;
+    font-size: 26px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 28px;
+    margin-top: 0;
+    letter-spacing: 0.3px;
+}
+
+/* Contenedor del logo */
+.logoContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+/* Logo MÁS GRANDE para mejor visibilidad */
+.logo {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 50%;
+    /* Fondo circular OSCURO para que se vean las letras */
+    background: rgba(37, 10, 10, 0.95);
+    padding: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    animation: logoAppear 0.6s ease-out 0.15s both;
+}
+
+@keyframes logoAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.7) rotate(-5deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Responsive - MEJORADO */
+@media (max-width: 768px) {
+    .pageContainer {
+        padding: 16px;
+    }
+
+    .loginCard {
+        padding: 36px 28px 40px;
+        max-width: 360px;
+        border-radius: 24px;
+    }
+
+    .title {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .logo {
+        width: 130px;
+        height: 130px;
+        padding: 12px;
+    }
+
+    .decorativeCircle1 {
+        border-left: 300px solid transparent;
+        border-right: 300px solid transparent;
+        border-bottom: 400px solid rgba(139, 54, 56, 0.4);
+    }
+
+    .decorativeCircle2 {
+        width: 500px;
+        height: 500px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageContainer {
+        padding: 12px;
+    }
+
+    .loginCard {
+        padding: 32px 24px 36px;
+        max-width: 100%;
+        border-radius: 20px;
+    }
+
+    .title {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .logo {
+        width: 115px;
+        height: 115px;
+        padding: 10px;
+    }
+
+    .decorativeCircle1,
+    .decorativeCircle2 {
+        opacity: 0.5;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 360px) {
+    .loginCard {
+        padding: 28px 20px 32px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .logo {
+        width: 105px;
+        height: 105px;
+        padding: 8px;
+    }
+}

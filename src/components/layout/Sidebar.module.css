@@ -1,0 +1,36 @@
+.sider {
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    overflow: auto;
+}
+
+.logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #001529;
+    color: white;
+}
+
+.logoIcon {
+    font-size: 28px;
+    color: #1890ff;
+}
+
+.logoText {
+    margin-left: 12px;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.menu {
+    border-right: none;
+}
