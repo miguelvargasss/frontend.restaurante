@@ -1,0 +1,96 @@
+.errorContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px;
+}
+
+.errorContent {
+    background: white;
+    border-radius: 12px;
+    padding: 60px 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+.errorCode {
+    font-size: 72px;
+    font-weight: 700;
+    color: #262626;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.errorMessage {
+    font-size: 18px;
+    color: #595959;
+    display: block;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.iconContainer {
+    margin-bottom: 24px;
+}
+
+.errorIcon {
+    font-size: 120px;
+    color: #8c8c8c;
+}
+
+/* Iconos específicos por tipo de error */
+.errorContainer :global(.ant-result-icon) {
+    margin-bottom: 32px;
+}
+
+/* 403 - Morado */
+.errorContainer :global(.ant-result-error) .errorIcon {
+    color: #9254de;
+}
+
+/* 404 - Azul */
+.errorContainer :global(.ant-result-info) .errorIcon {
+    color: #1890ff;
+}
+
+/* 500 - Naranja/Rojo */
+.errorContainer :global(.ant-result-warning) .errorIcon {
+    color: #ff7875;
+}
+
+.backButton {
+    min-width: 160px;
+    height: 44px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 6px;
+    margin: 0 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .errorContent {
+        padding: 40px 24px;
+    }
+
+    .errorCode {
+        font-size: 56px;
+    }
+
+    .errorMessage {
+        font-size: 16px;
+    }
+
+    .errorIcon {
+        font-size: 80px;
+    }
+
+    .backButton {
+        width: 100%;
+        margin: 8px 0;
+    }
+}

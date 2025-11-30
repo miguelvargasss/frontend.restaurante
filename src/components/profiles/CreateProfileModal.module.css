@@ -1,0 +1,71 @@
+.form {
+    padding-top: 16px;
+}
+
+.tabContent {
+    padding: 20px 0;
+    min-height: 250px;
+}
+
+.permissionsContainer {
+    margin-top: 24px;
+}
+
+.permissionSection {
+    margin-bottom: 24px;
+}
+
+.permissionSection h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #262626;
+}
+
+.permissionRow {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.permissionLabel {
+    font-weight: 500;
+    min-width: 120px;
+    color: #595959;
+}
+
+.formActions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.submitButton,
+.nextButton {
+    min-width: 140px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .permissionRow {
+        flex-wrap: wrap;
+    }
+
+    .permissionLabel {
+        width: 100%;
+    }
+
+    .formActions {
+        flex-direction: column;
+    }
+
+    .submitButton,
+    .nextButton {
+        width: 100%;
+    }
+}

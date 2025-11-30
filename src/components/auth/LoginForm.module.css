@@ -1,0 +1,96 @@
+.formContainer {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+
+.title {
+  color: #FFFFFF;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 0;
+  letter-spacing: 0.3px;
+}
+
+.form {
+  width: 100%;
+}
+
+/* Reducir espacio entre campos */
+:global(.ant-form-item) {
+  margin-bottom: 16px !important;
+}
+
+.input {
+  background: #FFFFFF !important;
+  border: 1px solid #E0E0E0 !important;
+  border-radius: 8px !important;
+  height: 44px !important;
+  font-size: 14px;
+}
+
+.input:hover,
+.input:focus {
+  border-color: #00BCD4 !important;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.1) !important;
+}
+
+.inputIcon {
+  color: #999999;
+  font-size: 15px;
+}
+
+.submitButtonContainer {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.submitButton {
+  height: 44px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  background: #00BCD4 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #00ACC1 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4) !important;
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+.errorAlert {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* Estilos para los labels del formulario */
+:global(.ant-form-item-label > label) {
+  color: #FFFFFF !important;
+  font-weight: 500;
+  font-size: 13px !important;
+}
+
+/* Estilos para mensajes de validación */
+:global(.ant-form-item-explain-error) {
+  color: #FF6B6B;
+  font-size: 12px;
+}
+
+/* Mejorar placeholder */
+:global(.ant-input::placeholder),
+:global(.ant-input-password input::placeholder) {
+  color: #999999;
+  font-size: 13px;
+}
