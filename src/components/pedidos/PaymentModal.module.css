@@ -1,0 +1,122 @@
+.modalContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    min-height: 500px;
+}
+
+.leftPanel {
+    display: flex;
+    flex-direction: column;
+    padding-right: 24px;
+    border-right: 1px solid #f0f0f0;
+}
+
+.productsList {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.productItem {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.productItem:last-child {
+    border-bottom: none;
+}
+
+.productInfo h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: #262626;
+}
+
+.productInfo p {
+    font-size: 12px;
+    color: #8c8c8c;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+}
+
+.productDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quantity {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1890ff;
+}
+
+.price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #262626;
+}
+
+.totalSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.totalAmount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1890ff;
+}
+
+.printButton {
+    margin-top: 12px;
+}
+
+.rightPanel {
+    display: flex;
+    flex-direction: column;
+}
+
+.paymentHeader h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+}
+
+.form {
+    flex: 1;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.submitButton {
+    margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modalContent {
+        grid-template-columns: 1fr;
+    }
+
+    .leftPanel {
+        border-right: none;
+        border-bottom: 1px solid #f0f0f0;
+        padding-right: 0;
+        padding-bottom: 24px;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+    }
+}

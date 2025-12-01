@@ -12,7 +12,7 @@ import { PerfilesPage } from './pages/configuracion/PerfilesPage';
 import { EmpresaPage } from './pages/configuracion/EmpresaPage';
 import { CajaPage } from './pages/CajaPage';
 import { TrabajadoresPage } from './pages/TrabajadoresPage';
-import { PedidosPage } from './pages/PedidosPage';
+import { PedidosPage } from './pages/pedidos/PedidosPage';
 
 // Reportes
 import { GestionCajasPage } from './pages/reportes/GestionCajasPage';

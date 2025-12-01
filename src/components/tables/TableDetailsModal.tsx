@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, InputNumber, Switch, Button, message } from 'antd';
-import type { Table, UpdateTableRequest } from '../../types/table.types';
+import type { UpdateTableRequest } from '../../types/table.types';
 import { tableService } from '../../services/table.service';
 import styles from './TableDetailsModal.module.css';
 

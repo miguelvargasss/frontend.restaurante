@@ -12,6 +12,15 @@ export interface Table {
     loungeName: string | null;
     createdAt: string;
     updatedAt: string | null;
+    // Properties for order management and table locking
+    tableNumber?: string;
+    location?: string;
+    isOccupied?: boolean;
+    occupiedBy?: string;
+    occupiedByUserId?: number;
+    currentOrderId?: number;
+    currentOrderStatus?: 'Pendiente' | 'En Proceso' | 'Completada';
+    currentOrderIsPaid?: boolean;
 }
 
 export interface TableSimple {

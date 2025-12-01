@@ -1,21 +1,21 @@
 import { buildApiUrl } from '../conf/api.config';
 import type {
-    ProfileWithPermissions,
-    CreateProfileRequest,
-    UpdateProfileRequest,
-    ProfilesResponse,
-    ProfileFilters,
-} from '../types/profile.types';
+    Worker,
+    CreateWorkerRequest,
+    UpdateWorkerRequest,
+    WorkersResponse,
+    WorkerFilters,
+} from '../types/worker.types';
 
 // ============================================
-// Servicio de Perfiles
+// Servicio de Trabajadores
 // ============================================
 
-class ProfileService {
+class WorkerService {
     /**
-     * Obtener lista de perfiles con filtros
+     * Obtener lista de trabajadores con filtros
      */
-    async getProfiles(filters?: ProfileFilters): Promise<ProfilesResponse> {
+    async getWorkers(filters?: WorkerFilters): Promise<WorkersResponse> {
         try {
             const queryParams = new URLSearchParams();
 
@@ -23,7 +23,7 @@ class ProfileService {
             if (filters?.page) queryParams.append('page', filters.page.toString());
             if (filters?.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
 
-            const url = `${buildApiUrl('/profiles')}?${queryParams.toString()}`;
+            const url = `${buildApiUrl('/workers')}?${queryParams.toString()}`;
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -36,7 +36,7 @@ class ProfileService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener perfiles');
+                throw new Error('Error al obtener trabajadores');
             }
 
             return await response.json();
@@ -49,11 +49,11 @@ class ProfileService {
     }
 
     /**
-     * Obtener perfil por ID con todos sus permisos
+     * Obtener trabajador por ID
      */
-    async getProfileById(id: number): Promise<ProfileWithPermissions> {
+    async getWorkerById(id: number): Promise<Worker> {
         try {
-            const url = buildApiUrl(`/profiles/${id}`);
+            const url = buildApiUrl(`/workers/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -66,7 +66,7 @@ class ProfileService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener perfil');
+                throw new Error('Error al obtener trabajador');
             }
 
             return await response.json();
@@ -79,11 +79,11 @@ class ProfileService {
     }
 
     /**
-     * Crear nuevo perfil
+     * Crear nuevo trabajador
      */
-    async createProfile(profileData: CreateProfileRequest): Promise<ProfileWithPermissions> {
+    async createWorker(workerData: CreateWorkerRequest): Promise<Worker> {
         try {
-            const url = buildApiUrl('/profiles');
+            const url = buildApiUrl('/workers');
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -93,12 +93,12 @@ class ProfileService {
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(profileData),
+                body: JSON.stringify(workerData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al crear perfil');
+                throw new Error(errorData.message || 'Error al crear trabajador');
             }
 
             return await response.json();
@@ -111,14 +111,11 @@ class ProfileService {
     }
 
     /**
-     * Actualizar perfil
+     * Actualizar trabajador
      */
-    async updateProfile(
-        id: number,
-        profileData: UpdateProfileRequest
-    ): Promise<ProfileWithPermissions> {
+    async updateWorker(id: number, workerData: UpdateWorkerRequest): Promise<Worker> {
         try {
-            const url = buildApiUrl(`/profiles/${id}`);
+            const url = buildApiUrl(`/workers/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -128,12 +125,12 @@ class ProfileService {
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(profileData),
+                body: JSON.stringify(workerData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al actualizar perfil');
+                throw new Error(errorData.message || 'Error al actualizar trabajador');
             }
 
             return await response.json();
@@ -146,11 +143,11 @@ class ProfileService {
     }
 
     /**
-     * Eliminar perfil
+     * Eliminar trabajador
      */
-    async deleteProfile(id: number): Promise<void> {
+    async deleteWorker(id: number): Promise<void> {
         try {
-            const url = buildApiUrl(`/profiles/${id}`);
+            const url = buildApiUrl(`/workers/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -164,7 +161,7 @@ class ProfileService {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al eliminar perfil');
+                throw new Error(errorData.message || 'Error al eliminar trabajador');
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -176,4 +173,4 @@ class ProfileService {
 }
 
 // Exportar instancia única del servicio
-export const profileService = new ProfileService();
+export const workerService = new WorkerService();

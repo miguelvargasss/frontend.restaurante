@@ -1,0 +1,43 @@
+.form {
+    margin-top: 20px;
+}
+
+.radioGroup {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.radioIncome {
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    font-weight: 500;
+}
+
+.radioExpense {
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    font-weight: 500;
+}
+
+.formActions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.submitButton {
+    min-width: 160px;
+    font-weight: 500;
+}
+
+.cancelButton {
+    min-width: 100px;
+    font-weight: 500;
+}

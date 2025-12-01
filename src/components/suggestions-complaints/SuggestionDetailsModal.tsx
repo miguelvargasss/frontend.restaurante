@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Button, message } from 'antd';
-import type { Suggestion, UpdateSuggestionRequest } from '../../types/suggestion.types';
+import type { UpdateSuggestionRequest } from '../../types/suggestion.types';
 import { suggestionService } from '../../services/suggestion.service';
 import styles from './SuggestionDetailsModal.module.css';
 

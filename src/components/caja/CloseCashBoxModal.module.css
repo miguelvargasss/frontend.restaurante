@@ -1,0 +1,128 @@
+.form {
+    margin-top: 20px;
+}
+
+.summarySection {
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.summaryTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #262626;
+}
+
+.summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.summaryItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.summaryRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.summaryLabel {
+    font-size: 14px;
+    color: #8c8c8c;
+    font-weight: 500;
+}
+
+.summaryValue {
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.summaryValue.income {
+    color: #52c41a;
+}
+
+.summaryValue.expense {
+    color: #ff4d4f;
+}
+
+.differenceSection {
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.differenceSection.positive {
+    background: #fff7e6;
+    border: 1px solid #ffd591;
+}
+
+.differenceSection.negative {
+    background: #fff1f0;
+    border: 1px solid #ffccc7;
+}
+
+.differenceLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #595959;
+    margin-bottom: 8px;
+}
+
+.differenceAmount {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.differenceSection.positive .differenceAmount {
+    color: #fa8c16;
+}
+
+.differenceSection.negative .differenceAmount {
+    color: #ff4d4f;
+}
+
+.differenceNote {
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.differenceSection.positive .differenceNote {
+    color: #d46b08;
+}
+
+.differenceSection.negative .differenceNote {
+    color: #cf1322;
+}
+
+.formActions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.submitButton {
+    min-width: 140px;
+    font-weight: 500;
+}
+
+.cancelButton {
+    min-width: 100px;
+    font-weight: 500;
+}

@@ -1,29 +1,30 @@
 import { buildApiUrl } from '../conf/api.config';
 import type {
-    ProfileWithPermissions,
-    CreateProfileRequest,
-    UpdateProfileRequest,
-    ProfilesResponse,
-    ProfileFilters,
-} from '../types/profile.types';
+    Lounge,
+    CreateLoungeRequest,
+    UpdateLoungeRequest,
+    LoungesResponse,
+    LoungeFilters,
+} from '../types/lounge.types';
 
 // ============================================
-// Servicio de Perfiles
+// Servicio de Ambientes/Salones
 // ============================================
 
-class ProfileService {
+class LoungeService {
     /**
-     * Obtener lista de perfiles con filtros
+     * Obtener lista de ambientes con filtros
      */
-    async getProfiles(filters?: ProfileFilters): Promise<ProfilesResponse> {
+    async getLounges(filters?: LoungeFilters): Promise<LoungesResponse> {
         try {
             const queryParams = new URLSearchParams();
 
-            if (filters?.search) queryParams.append('search', filters.search);
             if (filters?.page) queryParams.append('page', filters.page.toString());
             if (filters?.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
+            if (filters?.search) queryParams.append('search', filters.search);
+            if (filters?.isActive !== undefined) queryParams.append('isActive', filters.isActive.toString());
 
-            const url = `${buildApiUrl('/profiles')}?${queryParams.toString()}`;
+            const url = `${buildApiUrl('/lounges')}?${queryParams.toString()}`;
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -36,7 +37,7 @@ class ProfileService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener perfiles');
+                throw new Error('Error al obtener ambientes');
             }
 
             return await response.json();
@@ -49,11 +50,11 @@ class ProfileService {
     }
 
     /**
-     * Obtener perfil por ID con todos sus permisos
+     * Obtener ambiente por ID
      */
-    async getProfileById(id: number): Promise<ProfileWithPermissions> {
+    async getLoungeById(id: number): Promise<Lounge> {
         try {
-            const url = buildApiUrl(`/profiles/${id}`);
+            const url = buildApiUrl(`/lounges/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -66,7 +67,7 @@ class ProfileService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener perfil');
+                throw new Error('Error al obtener ambiente');
             }
 
             return await response.json();
@@ -79,11 +80,11 @@ class ProfileService {
     }
 
     /**
-     * Crear nuevo perfil
+     * Crear nuevo ambiente
      */
-    async createProfile(profileData: CreateProfileRequest): Promise<ProfileWithPermissions> {
+    async createLounge(loungeData: CreateLoungeRequest): Promise<Lounge> {
         try {
-            const url = buildApiUrl('/profiles');
+            const url = buildApiUrl('/lounges');
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -93,12 +94,12 @@ class ProfileService {
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(profileData),
+                body: JSON.stringify(loungeData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al crear perfil');
+                throw new Error(errorData.message || 'Error al crear ambiente');
             }
 
             return await response.json();
@@ -111,14 +112,11 @@ class ProfileService {
     }
 
     /**
-     * Actualizar perfil
+     * Actualizar ambiente
      */
-    async updateProfile(
-        id: number,
-        profileData: UpdateProfileRequest
-    ): Promise<ProfileWithPermissions> {
+    async updateLounge(id: number, loungeData: UpdateLoungeRequest): Promise<Lounge> {
         try {
-            const url = buildApiUrl(`/profiles/${id}`);
+            const url = buildApiUrl(`/lounges/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -128,12 +126,12 @@ class ProfileService {
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(profileData),
+                body: JSON.stringify(loungeData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al actualizar perfil');
+                throw new Error(errorData.message || 'Error al actualizar ambiente');
             }
 
             return await response.json();
@@ -146,11 +144,11 @@ class ProfileService {
     }
 
     /**
-     * Eliminar perfil
+     * Eliminar ambiente
      */
-    async deleteProfile(id: number): Promise<void> {
+    async deleteLounge(id: number): Promise<void> {
         try {
-            const url = buildApiUrl(`/profiles/${id}`);
+            const url = buildApiUrl(`/lounges/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -164,7 +162,7 @@ class ProfileService {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al eliminar perfil');
+                throw new Error(errorData.message || 'Error al eliminar ambiente');
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -176,4 +174,4 @@ class ProfileService {
 }
 
 // Exportar instancia única del servicio
-export const profileService = new ProfileService();
+export const loungeService = new LoungeService();
