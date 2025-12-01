@@ -53,19 +53,6 @@
     gap: 12px;
 }
 
-.loungeButton {
-    font-weight: 500;
-    background-color: #52c41a;
-    border-color: #52c41a;
-    color: #fff;
-}
-
-.loungeButton:hover {
-    background-color: #73d13d !important;
-    border-color: #73d13d !important;
-    color: #fff !important;
-}
-
 .createButton {
     font-weight: 500;
     background-color: #1890ff;

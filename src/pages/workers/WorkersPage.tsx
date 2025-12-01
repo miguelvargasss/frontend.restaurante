@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Table, Popconfirm, message, Tag } from 'antd';
-import { SearchOutlined, PlusOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { Input, Button, Table, message } from 'antd';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import type { Table as TableType } from '../../types/table.types';
-import { tableService } from '../../services/table.service';
-import { CreateTableModal } from '../../components/tables/CreateTableModal';
-import { TableDetailsModal } from '../../components/tables/TableDetailsModal';
-import { LoungeManagementModal } from '../../components/tables/LoungeManagementModal';
-import styles from './MesasPage.module.css';
+import type { Worker } from '../../types/worker.types';
+import { workerService } from '../../services/worker.service';
+import { CreateWorkerModal } from '../../components/workers/CreateWorkerModal';
+import { WorkerDetailsModal } from '../../components/workers/WorkerDetailsModal';
+import { DeleteWorkerModal } from '../../components/workers/DeleteWorkerModal';
+import styles from './WorkersPage.module.css';
 
 // ============================================
-// Componente MesasPage
+// Componente WorkersPage
 // ============================================
 
-export const MesasPage: React.FC = () => {
-    const [tables, setTables] = useState<TableType[]>([]);
+export const WorkersPage: React.FC = () => {
+    const [workers, setWorkers] = useState<Worker[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [pagination, setPagination] = useState({
@@ -26,31 +26,32 @@ export const MesasPage: React.FC = () => {
     // Estados para modales
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-    const [loungeModalOpen, setLoungeModalOpen] = useState(false);
-    const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [selectedWorkerId, setSelectedWorkerId] = useState<number | null>(null);
+    const [selectedWorkerName, setSelectedWorkerName] = useState('');
 
-    // Cargar mesas al montar el componente
+    // Cargar trabajadores al montar el componente
     useEffect(() => {
-        loadTables();
+        loadWorkers();
     }, [pagination.current, pagination.pageSize, searchText]);
 
-    const loadTables = async () => {
+    const loadWorkers = async () => {
         setLoading(true);
         try {
-            const response = await tableService.getTables({
+            const response = await workerService.getWorkers({
                 page: pagination.current,
                 pageSize: pagination.pageSize,
                 search: searchText || undefined,
             });
 
-            setTables(response.tables);
+            setWorkers(response.workers);
             setPagination((prev) => ({
                 ...prev,
                 total: response.total,
             }));
         } catch (error) {
-            message.error('Error al cargar mesas');
-            console.error('Error loading tables:', error);
+            message.error('Error al cargar trabajadores');
+            console.error('Error loading workers:', error);
         } finally {
             setLoading(false);
         }
@@ -69,68 +70,66 @@ export const MesasPage: React.FC = () => {
         });
     };
 
-    const handleDelete = async (id: number) => {
-        try {
-            await tableService.deleteTable(id);
-            message.success('Mesa eliminada exitosamente');
-            loadTables();
-        } catch (error) {
-            if (error instanceof Error) {
-                message.error(`Error: ${error.message}`);
-            } else {
-                message.error('Error al eliminar mesa');
-            }
-        }
-    };
-
     const handleCreateSuccess = () => {
-        loadTables();
+        loadWorkers();
     };
 
-    const handleViewDetails = (tableId: number) => {
-        setSelectedTableId(tableId);
+    const handleViewDetails = (workerId: number) => {
+        setSelectedWorkerId(workerId);
         setDetailsModalOpen(true);
     };
 
     const handleDetailsSuccess = () => {
-        loadTables();
+        loadWorkers();
+    };
+
+    const handleDeleteClick = (workerId: number, workerName: string) => {
+        setSelectedWorkerId(workerId);
+        setSelectedWorkerName(workerName);
+        setDeleteModalOpen(true);
+    };
+
+    const handleDeleteSuccess = () => {
+        loadWorkers();
     };
 
     // Definición de columnas de la tabla
-    const columns: ColumnsType<TableType> = [
+    const columns: ColumnsType<Worker> = [
         {
-            title: 'ID Mesa',
+            title: 'Nombre(s)',
             dataIndex: 'name',
             key: 'name',
-            width: '20%',
-        },
-        {
-            title: 'Ambiente',
-            dataIndex: 'environment',
-            key: 'environment',
-            width: '25%',
-        },
-        {
-            title: 'Capacidad',
-            dataIndex: 'capacity',
-            key: 'capacity',
             width: '15%',
         },
         {
-            title: 'Estado',
-            dataIndex: 'isActive',
-            key: 'isActive',
+            title: 'Apellidos',
+            dataIndex: 'lastName',
+            key: 'lastName',
             width: '15%',
-            render: (isActive: boolean) => (
-                <Tag color={isActive ? 'green' : 'red'}>
-                    {isActive ? 'Activo' : 'Inactivo'}
-                </Tag>
-            ),
+        },
+        {
+            title: 'DNI',
+            dataIndex: 'dni',
+            key: 'dni',
+            width: '12%',
+        },
+        {
+            title: 'N° Teléfono',
+            dataIndex: 'phone',
+            key: 'phone',
+            width: '12%',
+        },
+        {
+            title: 'Sueldo',
+            dataIndex: 'salary',
+            key: 'salary',
+            width: '12%',
+            render: (salary: number) => `S/ ${salary.toFixed(2)}`,
         },
         {
             title: 'Acciones',
             key: 'actions',
-            width: '25%',
+            width: '20%',
             render: (_, record) => (
                 <div className={styles.actions}>
                     <Button
@@ -141,16 +140,14 @@ export const MesasPage: React.FC = () => {
                     >
                         Detalles
                     </Button>
-                    <Popconfirm
-                        title="¿Estás seguro de eliminar esta mesa?"
-                        onConfirm={() => handleDelete(record.id)}
-                        okText="Sí"
-                        cancelText="No"
+                    <Button
+                        danger
+                        size="small"
+                        className={styles.deleteButton}
+                        onClick={() => handleDeleteClick(record.id, `${record.name} ${record.lastName}`)}
                     >
-                        <Button danger size="small" className={styles.deleteButton}>
-                            Eliminar
-                        </Button>
-                    </Popconfirm>
+                        Eliminar
+                    </Button>
                 </div>
             ),
         },
@@ -160,15 +157,15 @@ export const MesasPage: React.FC = () => {
         <div className={styles.container}>
             {/* Header */}
             <div className={styles.header}>
-                <h1 className={styles.title}>Gestión De Mesas</h1>
+                <h1 className={styles.title}>Gestión De Trabajadores</h1>
             </div>
 
             {/* Barra de búsqueda y botón */}
             <div className={styles.toolbar}>
                 <div className={styles.leftSection}>
-                    <h2 className={styles.subtitle}>Lista De Mesas</h2>
+                    <h2 className={styles.subtitle}>Lista de Trabajadores</h2>
                     <Input
-                        placeholder="Mesa"
+                        placeholder="Nombre y Apellidos"
                         prefix={<SearchOutlined />}
                         className={styles.searchInput}
                         onChange={(e) => handleSearch(e.target.value)}
@@ -177,29 +174,21 @@ export const MesasPage: React.FC = () => {
                 </div>
                 <div className={styles.rightSection}>
                     <Button
-                        icon={<EnvironmentOutlined />}
-                        size="large"
-                        onClick={() => setLoungeModalOpen(true)}
-                        className={styles.loungeButton}
-                    >
-                        Ambientes
-                    </Button>
-                    <Button
                         type="primary"
                         icon={<PlusOutlined />}
                         size="large"
                         onClick={() => setCreateModalOpen(true)}
                         className={styles.createButton}
                     >
-                        Crear Mesa
+                        Crear Trabajador
                     </Button>
                 </div>
             </div>
 
-            {/* Tabla de mesas */}
+            {/* Tabla de trabajadores */}
             <Table
                 columns={columns}
-                dataSource={tables}
+                dataSource={workers}
                 loading={loading}
                 rowKey="id"
                 pagination={{
@@ -215,26 +204,32 @@ export const MesasPage: React.FC = () => {
             />
 
             {/* Modales */}
-            <CreateTableModal
+            <CreateWorkerModal
                 open={createModalOpen}
                 onClose={() => setCreateModalOpen(false)}
                 onSuccess={handleCreateSuccess}
             />
 
-            <TableDetailsModal
+            <WorkerDetailsModal
                 open={detailsModalOpen}
-                tableId={selectedTableId}
+                workerId={selectedWorkerId}
                 onClose={() => {
                     setDetailsModalOpen(false);
-                    setSelectedTableId(null);
+                    setSelectedWorkerId(null);
                 }}
                 onSuccess={handleDetailsSuccess}
             />
 
-            <LoungeManagementModal
-                open={loungeModalOpen}
-                onClose={() => setLoungeModalOpen(false)}
-                onLoungeChange={loadTables}
+            <DeleteWorkerModal
+                open={deleteModalOpen}
+                workerId={selectedWorkerId}
+                workerName={selectedWorkerName}
+                onClose={() => {
+                    setDeleteModalOpen(false);
+                    setSelectedWorkerId(null);
+                    setSelectedWorkerName('');
+                }}
+                onSuccess={handleDeleteSuccess}
             />
         </div>
     );

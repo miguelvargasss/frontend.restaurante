@@ -36,7 +36,7 @@ export const CreateSuggestionComplaintModal: React.FC<CreateSuggestionComplaintM
         try {
             if (activeTab === 'suggestion') {
                 const suggestionData: CreateSuggestionRequest = {
-                    customerName: values.customerName,
+                    name: values.customerName,
                     details: values.details,
                 };
 
@@ -44,8 +44,8 @@ export const CreateSuggestionComplaintModal: React.FC<CreateSuggestionComplaintM
                 message.success('Sugerencia creada exitosamente');
             } else {
                 const complaintData: CreateComplaintRequest = {
-                    customerName: values.customerName,
-                    details: values.details,
+                    name: values.customerName,
+                    detail: values.details,
                 };
 
                 await complaintService.createComplaint(complaintData);

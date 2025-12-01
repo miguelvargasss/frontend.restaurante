@@ -1,101 +1,33 @@
 import { buildApiUrl } from '../conf/api.config';
 import type {
-    Table,
-    TableSimple,
-    CreateTableRequest,
-    UpdateTableRequest,
-    TablesResponse,
-    TableFilters,
-} from '../types/table.types';
+    SmallBox,
+    CreateSmallBoxRequest,
+    CloseSmallBoxRequest,
+    CreateCashMovementRequest,
+    SmallBoxesResponse,
+    SmallBoxFilters,
+    CashMovement,
+} from '../types/smallBox.types';
 
 // ============================================
-// Servicio de Mesas
+// Servicio de Caja Chica
 // ============================================
 
-class TableService {
+class SmallBoxService {
     /**
-     * Obtener lista de mesas con filtros
+     * Obtener lista de cajas con filtros
      */
-    async getTables(filters?: TableFilters): Promise<TablesResponse> {
-        try {
-            const queryParams = new URLSearchParams();
-
-            if (filters?.search) queryParams.append('search', filters.search);
-            if (filters?.isActive !== undefined) queryParams.append('isActive', filters.isActive.toString());
-            if (filters?.loungeId) queryParams.append('loungeId', filters.loungeId.toString());
-            if (filters?.page) queryParams.append('page', filters.page.toString());
-            if (filters?.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
-
-            const url = `${buildApiUrl('/tables')}?${queryParams.toString()}`;
-            const token = localStorage.getItem('auth_token');
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token && { Authorization: `Bearer ${token}` }),
-                },
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al obtener mesas');
-            }
-
-            return await response.json();
-        } catch (error) {
-            if (error instanceof Error) {
-                throw error;
-            }
-            throw new Error('Error de conexión con el servidor');
-        }
-    }
-
-    /**
-     * Obtener lista simplificada de mesas activas (para dropdowns)
-     */
-    async getTablesSimple(): Promise<TableSimple[]> {
-        try {
-            const url = buildApiUrl('/tables/simple');
-            const token = localStorage.getItem('auth_token');
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token && { Authorization: `Bearer ${token}` }),
-                },
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al obtener mesas');
-            }
-
-            return await response.json();
-        } catch (error) {
-            if (error instanceof Error) {
-                throw error;
-            }
-            throw new Error('Error de conexión con el servidor');
-        }
-    }
-
-    /**
-     * Obtener mesas con información de pedidos activos (para módulo de pedidos)
-     */
-    async getTablesWithOrders(filters?: TableFilters): Promise<TablesResponse> {
+    async getSmallBoxes(filters?: SmallBoxFilters): Promise<SmallBoxesResponse> {
         try {
             const queryParams = new URLSearchParams();
 
             if (filters?.page) queryParams.append('page', filters.page.toString());
             if (filters?.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
-            if (filters?.loungeId) queryParams.append('loungeId', filters.loungeId.toString());
+            if (filters?.isClosed !== undefined) queryParams.append('isClosed', filters.isClosed.toString());
+            if (filters?.startDate) queryParams.append('startDate', filters.startDate);
+            if (filters?.endDate) queryParams.append('endDate', filters.endDate);
 
-            // Parámetro para incluir información de pedidos activos
-            queryParams.append('includeOrders', 'true');
-
-            const url = `${buildApiUrl('/tables')}?${queryParams.toString()}`;
+            const url = `${buildApiUrl('/smallbox')}?${queryParams.toString()}`;
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -108,7 +40,7 @@ class TableService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener mesas con pedidos');
+                throw new Error('Error al obtener cajas');
             }
 
             return await response.json();
@@ -121,11 +53,11 @@ class TableService {
     }
 
     /**
-     * Obtener mesa por ID
+     * Obtener caja por ID
      */
-    async getTableById(id: number): Promise<Table> {
+    async getSmallBoxById(id: number): Promise<SmallBox> {
         try {
-            const url = buildApiUrl(`/tables/${id}`);
+            const url = buildApiUrl(`/smallbox/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -138,7 +70,7 @@ class TableService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener mesa');
+                throw new Error('Error al obtener caja');
             }
 
             return await response.json();
@@ -151,11 +83,46 @@ class TableService {
     }
 
     /**
-     * Crear nueva mesa
+     * Obtener caja activa (abierta)
+     * Retorna null si no hay caja activa
      */
-    async createTable(tableData: CreateTableRequest): Promise<Table> {
+    async getActiveSmallBox(): Promise<SmallBox | null> {
         try {
-            const url = buildApiUrl('/tables');
+            const url = buildApiUrl('/smallbox/active');
+            const token = localStorage.getItem('auth_token');
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { Authorization: `Bearer ${token}` }),
+                },
+                credentials: 'include',
+            });
+
+            if (response.status === 404) {
+                return null;
+            }
+
+            if (!response.ok) {
+                throw new Error('Error al obtener caja activa');
+            }
+
+            return await response.json();
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Error de conexión con el servidor');
+        }
+    }
+
+    /**
+     * Abrir nueva caja
+     */
+    async openSmallBox(data: CreateSmallBoxRequest): Promise<SmallBox> {
+        try {
+            const url = buildApiUrl('/smallbox');
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -165,12 +132,12 @@ class TableService {
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(tableData),
+                body: JSON.stringify(data),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al crear mesa');
+                throw new Error(errorData.message || 'Error al abrir caja');
             }
 
             return await response.json();
@@ -183,26 +150,26 @@ class TableService {
     }
 
     /**
-     * Actualizar mesa
+     * Cerrar caja
      */
-    async updateTable(id: number, tableData: UpdateTableRequest): Promise<Table> {
+    async closeSmallBox(id: number, data: CloseSmallBoxRequest): Promise<SmallBox> {
         try {
-            const url = buildApiUrl(`/tables/${id}`);
+            const url = buildApiUrl(`/smallbox/${id}/close`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(tableData),
+                body: JSON.stringify(data),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al actualizar mesa');
+                throw new Error(errorData.message || 'Error al cerrar caja');
             }
 
             return await response.json();
@@ -215,11 +182,43 @@ class TableService {
     }
 
     /**
-     * Eliminar mesa
+     * Registrar movimiento de caja (ingreso o egreso manual)
      */
-    async deleteTable(id: number): Promise<void> {
+    async addCashMovement(data: CreateCashMovementRequest): Promise<CashMovement> {
         try {
-            const url = buildApiUrl(`/tables/${id}`);
+            const url = buildApiUrl('/smallbox/cash-movement');
+            const token = localStorage.getItem('auth_token');
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { Authorization: `Bearer ${token}` }),
+                },
+                credentials: 'include',
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Error al registrar movimiento');
+            }
+
+            return await response.json();
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Error de conexión con el servidor');
+        }
+    }
+
+    /**
+     * Eliminar caja (solo cerradas)
+     */
+    async deleteSmallBox(id: number): Promise<void> {
+        try {
+            const url = buildApiUrl(`/smallbox/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -233,38 +232,8 @@ class TableService {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al eliminar mesa');
+                throw new Error(errorData.message || 'Error al eliminar caja');
             }
-        } catch (error) {
-            if (error instanceof Error) {
-                throw error;
-            }
-            throw new Error('Error de conexión con el servidor');
-        }
-    }
-
-    /**
-     * Activar/Desactivar mesa
-     */
-    async toggleTableStatus(id: number): Promise<Table> {
-        try {
-            const url = buildApiUrl(`/tables/${id}/toggle-status`);
-            const token = localStorage.getItem('auth_token');
-
-            const response = await fetch(url, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token && { Authorization: `Bearer ${token}` }),
-                },
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al cambiar estado de mesa');
-            }
-
-            return await response.json();
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
@@ -275,4 +244,4 @@ class TableService {
 }
 
 // Exportar instancia única del servicio
-export const tableService = new TableService();
+export const smallBoxService = new SmallBoxService();

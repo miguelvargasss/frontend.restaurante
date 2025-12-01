@@ -111,7 +111,7 @@ export const CreateComplaintModal: React.FC<CreateComplaintModalProps> = ({
                         size="large"
                         className={styles.submitButton}
                     >
-                        Siguiente
+                        Registrar
                     </Button>
                 </div>
             </Form>

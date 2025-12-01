@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Modal, Form, Input, InputNumber, Switch, Button, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Modal, Form, Input, InputNumber, Switch, Button, message, Select } from 'antd';
 import type { CreateTableRequest } from '../../types/table.types';
+import type { Lounge } from '../../types/lounge.types';
 import { tableService } from '../../services/table.service';
+import { loungeService } from '../../services/lounge.service';
 import styles from './CreateTableModal.module.css';
 
 // ============================================
@@ -25,14 +27,37 @@ export const CreateTableModal: React.FC<CreateTableModalProps> = ({
 }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const [lounges, setLounges] = useState<Lounge[]>([]);
+
+    useEffect(() => {
+        if (open) {
+            loadLounges();
+        }
+    }, [open]);
+
+    const loadLounges = async () => {
+        try {
+            const response = await loungeService.getLounges({
+                isActive: true,
+                pageSize: 100,
+            });
+            setLounges(response.lounges);
+        } catch (error) {
+            console.error('Error al cargar ambientes:', error);
+            message.error('Error al cargar ambientes');
+        }
+    };
 
     const handleSubmit = async (values: any) => {
         setLoading(true);
         try {
+            const selectedLounge = lounges.find(l => l.id === values.loungeId);
+            
             const tableData: CreateTableRequest = {
                 name: values.name,
-                environment: values.environment,
+                environment: selectedLounge?.Name || (selectedLounge as any)?.name || '',
                 capacity: values.capacity,
+                loungeId: values.loungeId,
                 isActive: values.isActive === true,
             };
 
@@ -101,14 +126,29 @@ export const CreateTableModal: React.FC<CreateTableModalProps> = ({
                 <div className={styles.formRow}>
                     <Form.Item
                         label="Ambiente"
-                        name="environment"
+                        name="loungeId"
                         rules={[
-                            { required: true, message: 'Ingresa el ambiente' },
-                            { max: 50, message: 'Máximo 50 caracteres' },
+                            { required: true, message: 'Selecciona el ambiente' },
                         ]}
                         className={styles.formItem}
                     >
-                        <Input placeholder="Salón Principal" size="large" />
+                        <Select
+                            placeholder="Seleccionar ambiente"
+                            size="large"
+                            showSearch
+                            optionFilterProp="children"
+                            onChange={(value) => {
+                                const selected = lounges.find(l => l.id === value);
+                                const loungeName = selected?.Name || (selected as any)?.name || '';
+                                form.setFieldsValue({ environment: loungeName });
+                            }}
+                        >
+                            {lounges.map((lounge) => (
+                                <Select.Option key={lounge.id} value={lounge.id}>
+                                    {lounge.Name || (lounge as any).name}
+                                </Select.Option>
+                            ))}
+                        </Select>
                     </Form.Item>
 
                     <Form.Item
@@ -138,7 +178,7 @@ export const CreateTableModal: React.FC<CreateTableModalProps> = ({
                         size="large"
                         className={styles.submitButton}
                     >
-                        Actualizar
+                        Registrar
                     </Button>
                     <Button onClick={handleCancel} size="large" className={styles.cancelButton}>
                         Cancel

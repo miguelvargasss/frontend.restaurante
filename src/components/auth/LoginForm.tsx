@@ -22,7 +22,6 @@ interface LoginFormProps {
 export const LoginForm: React.FC<LoginFormProps> = ({
     onSubmit,
     isLoading = false,
-    error,
     showTitle = true
 }) => {
     const [form] = Form.useForm();

@@ -1,32 +1,34 @@
 import { buildApiUrl } from '../conf/api.config';
 import type {
-    Table,
-    TableSimple,
-    CreateTableRequest,
-    UpdateTableRequest,
-    TablesResponse,
-    TableFilters,
-} from '../types/table.types';
+    Order,
+    CreateOrderRequest,
+    UpdateOrderRequest,
+    OrdersResponse,
+    OrderFilters,
+} from '../types/order.types';
 
 // ============================================
-// Servicio de Mesas
+// Servicio de Pedidos
 // ============================================
 
-class TableService {
+class OrderService {
     /**
-     * Obtener lista de mesas con filtros
+     * Obtener lista de pedidos con filtros
      */
-    async getTables(filters?: TableFilters): Promise<TablesResponse> {
+    async getOrders(filters?: OrderFilters): Promise<OrdersResponse> {
         try {
             const queryParams = new URLSearchParams();
 
+            if (filters?.page) queryParams.append('page', filters.page.toString());
+            if (filters?.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
             if (filters?.search) queryParams.append('search', filters.search);
-            if (filters?.isActive !== undefined) queryParams.append('isActive', filters.isActive.toString());
-            if (filters?.loungeId) queryParams.append('loungeId', filters.loungeId.toString());
-            if (filters?.page) queryParams.append('page', filters.page.toString());
-            if (filters?.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
+            if (filters?.status) queryParams.append('status', filters.status);
+            if (filters?.tableId) queryParams.append('tableId', filters.tableId.toString());
+            if (filters?.isPaid !== undefined) queryParams.append('isPaid', filters.isPaid.toString());
+            if (filters?.startDate) queryParams.append('startDate', filters.startDate);
+            if (filters?.endDate) queryParams.append('endDate', filters.endDate);
 
-            const url = `${buildApiUrl('/tables')}?${queryParams.toString()}`;
+            const url = `${buildApiUrl('/orders')}?${queryParams.toString()}`;
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -39,7 +41,7 @@ class TableService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener mesas');
+                throw new Error('Error al obtener pedidos');
             }
 
             return await response.json();
@@ -52,11 +54,11 @@ class TableService {
     }
 
     /**
-     * Obtener lista simplificada de mesas activas (para dropdowns)
+     * Obtener pedido por ID
      */
-    async getTablesSimple(): Promise<TableSimple[]> {
+    async getOrderById(id: number): Promise<Order> {
         try {
-            const url = buildApiUrl('/tables/simple');
+            const url = buildApiUrl(`/orders/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -69,7 +71,7 @@ class TableService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al obtener mesas');
+                throw new Error('Error al obtener pedido');
             }
 
             return await response.json();
@@ -82,80 +84,12 @@ class TableService {
     }
 
     /**
-     * Obtener mesas con información de pedidos activos (para módulo de pedidos)
+     * Crear nuevo pedido
+     * IMPORTANTE: Crea automáticamente un movimiento de ingreso en la caja activa
      */
-    async getTablesWithOrders(filters?: TableFilters): Promise<TablesResponse> {
+    async createOrder(orderData: CreateOrderRequest): Promise<Order> {
         try {
-            const queryParams = new URLSearchParams();
-
-            if (filters?.page) queryParams.append('page', filters.page.toString());
-            if (filters?.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
-            if (filters?.loungeId) queryParams.append('loungeId', filters.loungeId.toString());
-
-            // Parámetro para incluir información de pedidos activos
-            queryParams.append('includeOrders', 'true');
-
-            const url = `${buildApiUrl('/tables')}?${queryParams.toString()}`;
-            const token = localStorage.getItem('auth_token');
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token && { Authorization: `Bearer ${token}` }),
-                },
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al obtener mesas con pedidos');
-            }
-
-            return await response.json();
-        } catch (error) {
-            if (error instanceof Error) {
-                throw error;
-            }
-            throw new Error('Error de conexión con el servidor');
-        }
-    }
-
-    /**
-     * Obtener mesa por ID
-     */
-    async getTableById(id: number): Promise<Table> {
-        try {
-            const url = buildApiUrl(`/tables/${id}`);
-            const token = localStorage.getItem('auth_token');
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token && { Authorization: `Bearer ${token}` }),
-                },
-                credentials: 'include',
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al obtener mesa');
-            }
-
-            return await response.json();
-        } catch (error) {
-            if (error instanceof Error) {
-                throw error;
-            }
-            throw new Error('Error de conexión con el servidor');
-        }
-    }
-
-    /**
-     * Crear nueva mesa
-     */
-    async createTable(tableData: CreateTableRequest): Promise<Table> {
-        try {
-            const url = buildApiUrl('/tables');
+            const url = buildApiUrl('/orders');
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -165,12 +99,12 @@ class TableService {
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(tableData),
+                body: JSON.stringify(orderData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al crear mesa');
+                throw new Error(errorData.message || 'Error al crear pedido');
             }
 
             return await response.json();
@@ -183,11 +117,11 @@ class TableService {
     }
 
     /**
-     * Actualizar mesa
+     * Actualizar pedido
      */
-    async updateTable(id: number, tableData: UpdateTableRequest): Promise<Table> {
+    async updateOrder(id: number, orderData: UpdateOrderRequest): Promise<Order> {
         try {
-            const url = buildApiUrl(`/tables/${id}`);
+            const url = buildApiUrl(`/orders/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -197,12 +131,12 @@ class TableService {
                     ...(token && { Authorization: `Bearer ${token}` }),
                 },
                 credentials: 'include',
-                body: JSON.stringify(tableData),
+                body: JSON.stringify(orderData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al actualizar mesa');
+                throw new Error(errorData.message || 'Error al actualizar pedido');
             }
 
             return await response.json();
@@ -215,11 +149,11 @@ class TableService {
     }
 
     /**
-     * Eliminar mesa
+     * Eliminar pedido (solo no pagados)
      */
-    async deleteTable(id: number): Promise<void> {
+    async deleteOrder(id: number): Promise<void> {
         try {
-            const url = buildApiUrl(`/tables/${id}`);
+            const url = buildApiUrl(`/orders/${id}`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -233,7 +167,7 @@ class TableService {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Error al eliminar mesa');
+                throw new Error(errorData.message || 'Error al eliminar pedido');
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -244,11 +178,42 @@ class TableService {
     }
 
     /**
-     * Activar/Desactivar mesa
+     * Cambiar estado del pedido
      */
-    async toggleTableStatus(id: number): Promise<Table> {
+    async changeStatus(id: number, newStatus: string): Promise<Order> {
         try {
-            const url = buildApiUrl(`/tables/${id}/toggle-status`);
+            const url = buildApiUrl(`/orders/${id}/change-status`);
+            const token = localStorage.getItem('auth_token');
+
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { Authorization: `Bearer ${token}` }),
+                },
+                credentials: 'include',
+                body: JSON.stringify(newStatus),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al cambiar estado del pedido');
+            }
+
+            return await response.json();
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Error de conexión con el servidor');
+        }
+    }
+
+    /**
+     * Marcar pedido como pagado
+     */
+    async markAsPaid(id: number): Promise<Order> {
+        try {
+            const url = buildApiUrl(`/orders/${id}/mark-as-paid`);
             const token = localStorage.getItem('auth_token');
 
             const response = await fetch(url, {
@@ -261,7 +226,8 @@ class TableService {
             });
 
             if (!response.ok) {
-                throw new Error('Error al cambiar estado de mesa');
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Error al marcar pedido como pagado');
             }
 
             return await response.json();
@@ -275,4 +241,4 @@ class TableService {
 }
 
 // Exportar instancia única del servicio
-export const tableService = new TableService();
+export const orderService = new OrderService();

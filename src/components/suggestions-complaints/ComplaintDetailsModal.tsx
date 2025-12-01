@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Button, message } from 'antd';
-import type { Complaint, UpdateComplaintRequest } from '../../types/complaint.types';
+import type { UpdateComplaintRequest } from '../../types/complaint.types';
 import { complaintService } from '../../services/complaint.service';
 import styles from './ComplaintDetailsModal.module.css';
 

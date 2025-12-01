@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, InputNumber, Select, DatePicker, TimePicker, Button, message } from 'antd';
-import type { Reserve, UpdateReserveRequest } from '../../types/reserve.types';
+import type { UpdateReserveRequest } from '../../types/reserve.types';
 import type { TableSimple } from '../../types/table.types';
 import { reserveService } from '../../services/reserve.service';
 import { tableService } from '../../services/table.service';

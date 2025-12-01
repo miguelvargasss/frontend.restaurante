@@ -64,7 +64,9 @@ export const ReservasPage: React.FC = () => {
 
     const handleDateChange = (date: any) => {
         if (date) {
-            setSelectedDate(date.format('YYYY-MM-DD'));
+            // Enviar fecha en formato ISO con hora de inicio del día (00:00:00)
+            // Esto ayuda al backend a filtrar correctamente
+            setSelectedDate(date.startOf('day').format('YYYY-MM-DD'));
         } else {
             setSelectedDate(null);
         }

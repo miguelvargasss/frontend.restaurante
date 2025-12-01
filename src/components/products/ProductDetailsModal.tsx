@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, InputNumber, Select, Switch, Button, message, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import type { Product, UpdateProductRequest } from '../../types/product.types';
+import { Modal, Form, Input, InputNumber, Select, Switch, Button, message } from 'antd';
+import type { UpdateProductRequest } from '../../types/product.types';
 import type { CategorySimple } from '../../types/category.types';
 import { productService } from '../../services/product.service';
 import { categoryService } from '../../services/category.service';
